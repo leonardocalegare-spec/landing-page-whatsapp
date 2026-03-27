@@ -90,3 +90,4 @@ Configuração esperada no Vercel:
 - `src/config/leadCapture.js`: configuração central da captação
 - `src/services/submitLead.js`: envio do lead e montagem do payload
 - `src/components/LeadForm.jsx`: integração do formulário com a camada de envio
+# landing-page-whatsapp
