@@ -67,7 +67,7 @@ export default function LeadForm({ content }) {
         type: result.mode === 'local' ? 'warning' : 'success',
         message: result.mode === 'local' ? result.message : content.success,
       })
-    } catch (error) {
+    } catch {
       setFeedback({
         type: 'error',
         message: 'Não foi possível enviar agora. Tente novamente em instantes.',
@@ -156,3 +156,4 @@ export default function LeadForm({ content }) {
     </form>
   )
 }
+

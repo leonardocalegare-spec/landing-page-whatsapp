@@ -46,7 +46,7 @@ export async function submitLead(payload) {
       headers: requestHeaders,
       body: JSON.stringify(payload),
     })
-  } catch (error) {
+  } catch {
     return {
       ok: false,
       message: 'Não foi possível enviar agora. Verifique o endpoint e tente novamente em instantes.',
@@ -66,3 +66,4 @@ export async function submitLead(payload) {
     mode: 'remote',
   }
 }
+
