@@ -12,58 +12,98 @@ export function buildLeadPayload(values) {
   }
 }
 
-function saveLeadLocally(payload) {
-  const existing = JSON.parse(window.localStorage.getItem('landing_leads') || '[]')
-  existing.push(payload)
-  window.localStorage.setItem('landing_leads', JSON.stringify(existing))
+async function readResponseBody(response) {
+  const responseText = await response.text()
+
+  if (!responseText) {
+    return null
+  }
+
+  try {
+    return JSON.parse(responseText)
+  } catch {
+    return null
+  }
+}
+
+function getEndpoint() {
+  return String(LEAD_CAPTURE_CONFIG.endpoint || '').trim()
+}
+
+function getRequestOptions(payload, extraOptions = {}) {
+  return {
+    method: 'POST',
+    headers: {
+      ...LEAD_CAPTURE_CONFIG.requestHeaders,
+      Accept: 'application/json, text/plain, */*',
+    },
+    body: JSON.stringify(payload),
+    redirect: 'follow',
+    ...extraOptions,
+  }
+}
+
+async function sendLead(endpoint, payload, extraOptions = {}) {
+  return fetch(endpoint, getRequestOptions(payload, extraOptions))
 }
 
 export async function submitLead(payload) {
-  const { endpoint, enableLocalFallback, requestHeaders } = LEAD_CAPTURE_CONFIG
+  const endpoint = getEndpoint()
 
   if (!endpoint) {
-    if (enableLocalFallback) {
-      saveLeadLocally(payload)
-      return {
-        ok: true,
-        mode: 'local',
-        message: 'Lead salvo localmente para teste. Configure o endpoint real para ativar a captação online.',
-      }
-    }
-
     return {
       ok: false,
-      message:
-        'A captação ainda não está conectada. Configure o endpoint do webhook para ativar o envio real.',
+      message: 'A captação ainda não está conectada. Verifique a configuração da API de leads.',
     }
   }
 
   let response
 
   try {
-    response = await fetch(endpoint, {
-      method: 'POST',
-      headers: requestHeaders,
-      body: JSON.stringify(payload),
+    console.info('[lead-submit] sending lead', {
+      endpoint,
+      source: payload.source,
+      contentType: LEAD_CAPTURE_CONFIG.requestHeaders['Content-Type'],
     })
-  } catch {
+
+    response = await sendLead(endpoint, payload)
+  } catch (error) {
+    console.error('[lead-submit] request failed', error)
+
     return {
       ok: false,
-      message: 'Não foi possível enviar agora. Verifique o endpoint e tente novamente em instantes.',
+      message: 'Não foi possível enviar agora. Tente novamente em instantes.',
     }
   }
+
+  console.info('[lead-submit] response received', {
+    ok: response.ok,
+    status: response.status,
+    type: response.type,
+  })
+
+  const responseData = await readResponseBody(response)
 
   if (!response.ok) {
     return {
       ok: false,
-      message: 'O envio não foi concluído. Revise o webhook configurado e tente novamente.',
+      message:
+        responseData?.message || 'O envio não foi concluído. Revise a integração e tente novamente.',
       status: response.status,
+    }
+  }
+
+  if (responseData?.success === false) {
+    return {
+      ok: false,
+      message:
+        responseData.message || 'Não foi possível gravar o lead. Tente novamente em instantes.',
     }
   }
 
   return {
     ok: true,
     mode: 'remote',
+    message: responseData?.message,
   }
 }
-
