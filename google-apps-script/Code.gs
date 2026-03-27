@@ -1,5 +1,28 @@
 const SHEET_NAME = 'Leads'
-const HEADERS = ['name', 'company', 'whatsapp', 'segment', 'difficulty', 'createdAt', 'source']
+const DASHBOARD_SHEET_NAME = 'Dashboard'
+const STATUS_OPTIONS = [
+  'Novo',
+  'Em contato',
+  'Qualificado',
+  'Proposta enviada',
+  'Fechado',
+  'Perdido',
+]
+const HEADERS = [
+  'createdAt',
+  'name',
+  'company',
+  'whatsapp',
+  'segment',
+  'difficulty',
+  'source',
+  'status',
+  'owner',
+  'lastContactAt',
+  'nextFollowUp',
+  'notes',
+]
+const REQUIRED_FIELDS = ['createdAt', 'name', 'company', 'whatsapp', 'segment', 'difficulty', 'source']
 const SPREADSHEET_ID = 'COLE_AQUI_O_ID_DA_PLANILHA'
 
 function getSpreadsheet() {
@@ -19,6 +42,9 @@ function getOrCreateSheet() {
   }
 
   ensureHeaders(sheet)
+  ensureLeadSheetFormatting(sheet)
+  ensureDashboardSheet(spreadsheet)
+
   return sheet
 }
 
@@ -33,8 +59,48 @@ function ensureHeaders(sheet) {
 
   if (!hasExpectedHeaders) {
     sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS])
-    sheet.setFrozenRows(1)
   }
+}
+
+function ensureLeadSheetFormatting(sheet) {
+  sheet.setFrozenRows(1)
+  ensureFilter(sheet)
+  ensureStatusValidation(sheet)
+}
+
+function ensureFilter(sheet) {
+  if (sheet.getFilter()) {
+    return
+  }
+
+  const rowCount = Math.max(sheet.getLastRow(), 1)
+  sheet.getRange(1, 1, rowCount, HEADERS.length).createFilter()
+}
+
+function ensureStatusValidation(sheet) {
+  const rule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(STATUS_OPTIONS, true)
+    .setAllowInvalid(false)
+    .build()
+
+  sheet.getRange(2, 8, Math.max(sheet.getMaxRows() - 1, 1), 1).setDataValidation(rule)
+}
+
+function ensureDashboardSheet(spreadsheet) {
+  let dashboardSheet = spreadsheet.getSheetByName(DASHBOARD_SHEET_NAME)
+
+  if (!dashboardSheet) {
+    dashboardSheet = spreadsheet.insertSheet(DASHBOARD_SHEET_NAME)
+  }
+
+  dashboardSheet.getRange(1, 1, 1, 2).setValues([['Status', 'Total']])
+  dashboardSheet.getRange(2, 1, STATUS_OPTIONS.length, 1).setValues(
+    STATUS_OPTIONS.map((status) => [status]),
+  )
+  dashboardSheet.getRange(2, 2, STATUS_OPTIONS.length, 1).setFormulas(
+    STATUS_OPTIONS.map((_, index) => [`=COUNTIF(${SHEET_NAME}!H:H,A${index + 2})`]),
+  )
+  dashboardSheet.setFrozenRows(1)
 }
 
 function parseRequestBody(e) {
@@ -46,16 +112,33 @@ function parseRequestBody(e) {
 }
 
 function validatePayload(payload) {
-  const requiredFields = ['name', 'company', 'whatsapp', 'segment', 'difficulty', 'createdAt', 'source']
-  const missingFields = requiredFields.filter((field) => !payload[field])
+  const missingFields = REQUIRED_FIELDS.filter((field) => !payload[field])
 
   if (missingFields.length > 0) {
     throw new Error('Campos obrigatórios ausentes: ' + missingFields.join(', '))
   }
 }
 
+function buildLeadRecord(payload) {
+  return {
+    createdAt: payload.createdAt,
+    name: payload.name,
+    company: payload.company,
+    whatsapp: payload.whatsapp,
+    segment: payload.segment,
+    difficulty: payload.difficulty,
+    source: payload.source,
+    status: 'Novo',
+    owner: '',
+    lastContactAt: '',
+    nextFollowUp: '',
+    notes: '',
+  }
+}
+
 function buildRow(payload) {
-  return HEADERS.map((header) => payload[header] || '')
+  const leadRecord = buildLeadRecord(payload)
+  return HEADERS.map((header) => leadRecord[header] || '')
 }
 
 function jsonResponse(body) {
@@ -71,6 +154,7 @@ function doPost(e) {
 
     const sheet = getOrCreateSheet()
     sheet.appendRow(buildRow(payload))
+    ensureDashboardSheet(getSpreadsheet())
 
     return jsonResponse({
       success: true,
