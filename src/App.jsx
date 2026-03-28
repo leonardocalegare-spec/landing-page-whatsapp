@@ -7,10 +7,10 @@ import { content } from './data/content'
 
 function App() {
   const whatsappMessage = encodeURIComponent(
-    'Olá! Quero entender como organizar melhor meu atendimento no WhatsApp.',
+    'Olá, Leonardo. Vi sua página e quero entender melhor como funciona a estruturação do atendimento via WhatsApp.',
   )
   const whatsappLink = `https://wa.me/${content.whatsappNumber}?text=${whatsappMessage}`
-  const whatsappDisplay = '+55 11 99999-9999'
+  const whatsappDisplay = content.whatsappDisplay
 
   return (
     <div id="top">
@@ -30,10 +30,18 @@ function App() {
                   {content.hero.secondaryCta}
                 </Button>
               </div>
+
+              <div className="hero-highlights">
+                {content.hero.highlights.map((item) => (
+                  <span key={item} className="pill">
+                    {item}
+                  </span>
+                ))}
+              </div>
             </div>
 
             <div className="hero-card">
-              <span className="card-badge">Fluxo inicial</span>
+              <span className="card-badge">Setup comercial inicial</span>
               <h3>{content.hero.cardTitle}</h3>
               <ul>
                 {content.hero.cardItems.map((item) => (
@@ -42,7 +50,8 @@ function App() {
               </ul>
               <div className="hero-card-footer">
                 <span>Mais clareza</span>
-                <span>Mais agilidade</span>
+                <span>Mais contexto</span>
+                <span>Mais consistência</span>
               </div>
             </div>
           </div>
@@ -131,11 +140,15 @@ function App() {
         >
           <div className="contact-grid">
             <div className="contact-copy">
-              <h3>Organize seu atendimento com mais clareza</h3>
-              <p>
-                Esta primeira versão da landing foi pensada para captar contatos e abrir
-                conversas qualificadas no WhatsApp.
-              </p>
+              <h3>{content.form.sideTitle}</h3>
+              <p>{content.form.sideText}</p>
+              <div className="contact-points">
+                {content.form.sidePoints.map((item) => (
+                  <span key={item} className="pill">
+                    {item}
+                  </span>
+                ))}
+              </div>
               <div className="contact-actions">
                 <Button href={whatsappLink} variant="secondary">
                   Falar no WhatsApp
@@ -156,6 +169,11 @@ function App() {
             </div>
             <div className="final-cta-actions">
               <Button href={whatsappLink}>{content.finalCta.button}</Button>
+              <div className="signature-card">
+                <span className="signature-eyebrow">{content.signature.eyebrow}</span>
+                <strong>{content.signature.name}</strong>
+                <p>{content.signature.role}</p>
+              </div>
             </div>
           </div>
         </section>
