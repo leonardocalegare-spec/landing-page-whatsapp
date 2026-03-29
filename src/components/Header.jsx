@@ -1,6 +1,6 @@
 import Button from './Button'
 
-export default function Header({ brand, nav, whatsappLink }) {
+export default function Header({ brand, nav, ctaHref, ctaLabel }) {
   return (
     <header className="site-header">
       <div className="container header-inner">
@@ -17,8 +17,8 @@ export default function Header({ brand, nav, whatsappLink }) {
         </nav>
 
         <div className="header-cta">
-          <Button href={whatsappLink} variant="secondary">
-            Falar no WhatsApp
+          <Button href={ctaHref}>
+            {ctaLabel}
           </Button>
         </div>
       </div>

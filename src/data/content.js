@@ -1,109 +1,173 @@
+const primaryCta = 'Quero entender como funciona'
+
 export const content = {
   brand: 'Operação WhatsApp',
   whatsappNumber: '5511918218635',
   whatsappDisplay: '+55 11 91821-8635',
+  primaryCta,
   nav: [
-    { label: 'Diagnóstico', href: '#dores' },
-    { label: 'Estrutura', href: '#solucao' },
-    { label: 'Processo', href: '#como-funciona' },
-    { label: 'Ganhos', href: '#beneficios' },
+    { label: 'Dor', href: '#dor' },
+    { label: 'Solução', href: '#solucao' },
+    { label: 'Como funciona', href: '#como-funciona' },
+    { label: 'Benefícios', href: '#beneficios' },
+    { label: 'Para quem é', href: '#para-quem' },
     { label: 'Contato', href: '#contato' },
   ],
   hero: {
-    eyebrow: 'Estratégia e estruturação comercial via WhatsApp',
-    title: 'Seu WhatsApp pode parecer mais profissional e vender com muito menos improviso.',
+    eyebrow: 'Landing page + WhatsApp + CRM',
+    title: 'Capte leads, leve para o WhatsApp e organize tudo sem perder oportunidades.',
     subtitle:
-      'Eu desenho uma operação enxuta para organizar o primeiro atendimento, qualificar melhor cada contato e transformar conversas em oportunidades reais de negócio.',
-    primaryCta: 'Quero estruturar meu atendimento',
-    secondaryCta: 'Falar com Leonardo',
-    cardTitle: 'O que entra no seu setup',
+      'Eu estruturo uma landing page enxuta com formulário, direcionamento para o WhatsApp e organização do lead no CRM para o seu comercial trabalhar com mais clareza desde o primeiro contato.',
+    support:
+      'Fluxo simples, direto e pensado para melhorar a entrada sem complicar o que já funciona.',
+    cardBadge: 'Estrutura de captação',
+    cardTitle: 'O que essa solução entrega na prática',
     cardItems: [
-      'Fluxo inicial de atendimento mais claro',
-      'Triagem comercial para entender perfil e interesse',
-      'Captação organizada dos dados do lead',
-      'Encaminhamento com mais contexto para o próximo passo',
+      'Página com proposta clara e CTA objetivo',
+      'Formulário com os dados certos para qualificação',
+      'Continuidade da conversa no WhatsApp sem atrito',
+      'Lead registrado de forma organizada para acompanhamento',
     ],
-    highlights: ['Operação mais clara', 'Atendimento mais ágil', 'Percepção mais profissional'],
+    highlights: ['Captação mais clara', 'WhatsApp melhor aproveitado', 'CRM mais organizado'],
   },
-  painPoints: {
-    title: 'Quando o WhatsApp vira improviso, o comercial perde ritmo',
+  problem: {
+    title: 'Sua operação perde lead quando a entrada é confusa',
     description:
-      'A maioria das operações não perde lead por falta de demanda. Perde porque o atendimento chega sem estrutura, sem prioridade e sem continuidade.',
+      'Muita empresa até recebe contatos, mas perde oportunidade porque o início do atendimento depende de improviso.',
     items: [
-      'Respostas lentas ou inconsistentes',
-      'Conversas que esfriam sem acompanhamento',
-      'Equipe repetindo as mesmas perguntas o dia inteiro',
-      'Leads entrando sem qualificação mínima',
-      'Falta de visão sobre quem precisa de follow-up',
-      'Percepção de atendimento amador mesmo com um bom serviço',
+      {
+        title: 'Leads chegam sem contexto',
+        text: 'A equipe precisa começar do zero e gasta tempo entendendo informações básicas.',
+      },
+      {
+        title: 'O WhatsApp vira gargalo',
+        text: 'Cada conversa segue um padrão diferente e a experiência fica inconsistente para quem chega.',
+      },
+      {
+        title: 'O follow-up se perde',
+        text: 'Sem organização, contatos interessados esfriam antes de virar próxima ação comercial.',
+      },
+      {
+        title: 'O CRM não ajuda o time',
+        text: 'Quando os dados entram incompletos, fica difícil acompanhar e priorizar oportunidades.',
+      },
     ],
   },
   solution: {
-    title: 'O que eu organizo para a sua operação funcionar melhor',
+    title: 'A solução é uma estrutura simples que conecta captação, conversa e organização',
     description:
-      'A proposta aqui não é complicar. É desenhar uma estrutura leve, prática e comercialmente inteligente para o WhatsApp deixar de ser gargalo e virar processo.',
+      'Em vez de ferramentas soltas, você passa a ter um fluxo claro para captar, direcionar e acompanhar cada lead.',
     items: [
-      'Fluxo de entrada com lógica de atendimento',
-      'Mensagens mais objetivas, humanas e profissionais',
-      'Captação de lead com dados úteis para a operação',
-      'Organização inicial para acompanhamento comercial',
-      'Mais contexto para agendamento, orçamento ou fechamento',
-      'Uma base operacional simples de manter no dia a dia',
+      {
+        title: 'Landing page',
+        text: 'Página objetiva, com proposta clara e formulário enxuto para captar o lead certo.',
+      },
+      {
+        title: 'WhatsApp',
+        text: 'O contato segue para o WhatsApp com menos atrito e mais intenção de conversa.',
+      },
+      {
+        title: 'CRM',
+        text: 'Os dados entram organizados para facilitar acompanhamento, retorno e visão comercial.',
+      },
     ],
   },
   howItWorks: {
-    title: 'Como o projeto acontece',
+    title: 'Como funciona na prática',
+    description:
+      'O fluxo foi pensado para ser fácil de entender, fácil de operar e útil para o comercial desde o início.',
     steps: [
       {
         number: '01',
-        title: 'Leitura do seu cenário atual',
-        text: 'Entendo como os contatos chegam, onde o atendimento trava e o que hoje está fazendo lead esfriar ou se perder.',
+        title: 'O usuário entra na landing',
+        text: 'Ele encontra uma mensagem clara, entende o valor da oferta e sabe exatamente qual é o próximo passo.',
       },
       {
         number: '02',
-        title: 'Desenho da operação inicial',
-        text: 'Estruturo a jornada de entrada, os pontos de triagem, as mensagens principais e a lógica comercial do primeiro contato.',
+        title: 'Deixa os dados no formulário',
+        text: 'Você capta as informações essenciais para não começar cada conversa no improviso.',
       },
       {
         number: '03',
-        title: 'Entrega com visão prática de uso',
-        text: 'Você recebe uma estrutura mais clara para operar, ajustar e evoluir o atendimento com mais segurança e consistência.',
+        title: 'Vai para o WhatsApp',
+        text: 'A continuidade acontece no canal mais natural para o atendimento, sem quebrar o interesse do lead.',
+      },
+      {
+        number: '04',
+        title: 'O lead fica organizado',
+        text: 'Os dados seguem estruturados para acompanhamento, follow-up e visão mais clara da operação.',
       },
     ],
   },
   benefits: {
-    title: 'O que muda na percepção e na operação',
+    title: 'O que essa estrutura melhora no dia a dia',
+    description:
+      'Cada parte da landing existe para gerar resultado comercial e reduzir perda de oportunidade.',
     items: [
-      'Mais velocidade no primeiro contato',
-      'Mais organização para acompanhar leads',
-      'Menos retrabalho da equipe',
-      'Mais clareza sobre quem avançou e quem travou',
-      'Atendimento com imagem mais premium e confiável',
-      'Base melhor para vender, agendar e dar follow-up',
+      {
+        title: 'Mais organização',
+        text: 'Leads entram com informação útil e ficam mais fáceis de acompanhar.',
+      },
+      {
+        title: 'Menos perda de lead',
+        text: 'O processo inicial ganha padrão e reduz contatos que esfriam por falta de sequência.',
+      },
+      {
+        title: 'Mais clareza comercial',
+        text: 'Fica mais fácil entender quem chegou, em que etapa está e o que precisa acontecer depois.',
+      },
+      {
+        title: 'Acompanhamento mais simples',
+        text: 'O CRM passa a apoiar o time com contexto, e não apenas guardar contatos soltos.',
+      },
     ],
   },
-  credibility: {
-    title: 'Uma solução enxuta, tech e aplicável de verdade',
-    text:
-      'A proposta não é empilhar ferramenta nem vender automação vazia. É organizar a operação com lógica comercial, linguagem mais forte e uma experiência de atendimento que transmite clareza, confiança e profissionalismo desde a primeira conversa.',
-    highlights: [
-      'Sem promessas forçadas',
-      'Sem números inventados',
-      'Mais estrutura, menos improviso',
+  audience: {
+    title: 'Para quem é',
+    description:
+      'Faz sentido para negócios que usam o WhatsApp como canal de entrada e precisam de uma operação inicial mais profissional.',
+    profileTitle: 'Ideal para quem hoje',
+    profileItems: [
+      'Recebe leads pelo WhatsApp, mas sente desorganização no atendimento',
+      'Quer captar melhor sem criar uma operação complexa',
+      'Precisa dar mais contexto para o time comercial',
+      'Quer acompanhar contatos com mais previsibilidade',
     ],
+    nichesTitle: 'Pode funcionar muito bem em nichos como',
+    niches: [
+      'Clínicas e saúde',
+      'Serviços B2B',
+      'Imobiliário',
+      'Consultorias',
+      'Educação e infoprodutos',
+      'Negócios locais',
+    ],
+  },
+  authority: {
+    title: 'Desenvolvido por Leonardo Calegare',
+    text:
+      'Uma estrutura pensada para unir página, atendimento via WhatsApp e organização comercial em um fluxo simples de operar, sem excesso de ferramenta e sem promessas infladas.',
+    highlights: ['Clareza comercial', 'Execução prática', 'Mais estrutura, menos improviso'],
+  },
+  finalCta: {
+    eyebrow: 'Próximo passo',
+    title: 'Se a entrada do lead ficar mais clara, o comercial trabalha melhor do começo ao follow-up.',
+    text: 'Vamos organizar a sua landing, o direcionamento para o WhatsApp e o registro do lead em uma estrutura simples, direta e pronta para operar.',
+    note: 'Preencha o formulário logo abaixo para eu entender o seu cenário.',
   },
   form: {
-    title: 'Peça uma leitura inicial da sua operação',
+    title: 'Quero entender como essa estrutura pode funcionar no meu caso',
     description:
-      'Preencha o formulário e eu analiso o seu cenário para entender onde o WhatsApp pode ganhar mais clareza, organização e eficiência comercial.',
-    sideTitle: 'Comece pela estrutura certa',
+      'Preencha os dados abaixo e eu avalio o seu cenário para mostrar onde a captação, o WhatsApp e o CRM podem ficar mais claros.',
+    sideTitle: 'Seu próximo passo com mais clareza',
     sideText:
-      'Se o seu atendimento já recebe demanda, o próximo ganho costuma vir da organização da operação. Quando a entrada está bem desenhada, fica mais fácil responder melhor, qualificar com contexto e conduzir a conversa com mais segurança.',
+      'Se hoje os contatos chegam, mas faltam padrão, contexto e acompanhamento, essa estrutura ajuda a transformar entrada em processo comercial.',
     sidePoints: [
-      'Diagnóstico inicial do atendimento',
-      'Leitura comercial do fluxo atual',
-      'Direção prática para o próximo passo',
+      'Leitura inicial do seu fluxo atual',
+      'Diagnóstico de onde o lead trava ou se perde',
+      'Direção prática para organizar a operação',
     ],
+    directWhatsappText: 'Se preferir, você também pode falar direto comigo no WhatsApp.',
     fields: {
       name: 'Nome',
       company: 'Empresa',
@@ -111,22 +175,12 @@ export const content = {
       segment: 'Segmento',
       difficulty: 'Principal desafio hoje',
     },
-    button: 'Quero receber uma análise inicial',
+    button: primaryCta,
     success:
-      'Recebi seus dados. Agora o próximo passo é avaliar seu cenário e voltar com uma direção prática para estruturar melhor o seu atendimento.',
-  },
-  finalCta: {
-    title: 'Se o seu WhatsApp já é canal de entrada, ele precisa operar como parte do comercial.',
-    text: 'Vamos estruturar essa operação para ela transmitir mais valor, organizar melhor seus leads e sustentar conversas com mais potencial de fechamento.',
-    button: 'Quero conversar sobre a minha operação',
-  },
-  signature: {
-    eyebrow: 'Estratégia, criação e execução',
-    name: 'Leonardo Calegare',
-    role: 'Responsável pelo desenho da operação, pela construção da experiência e pela execução do projeto.',
+      'Recebi seus dados. Agora vou analisar o seu cenário e voltar com uma direção prática para estruturar melhor a sua operação.',
   },
   footer: {
-    text: 'Estruturação de atendimento, organização comercial e captação via WhatsApp para negócios que querem operar com mais clareza e mais percepção de valor.',
+    text: 'Landing page de captação com integração via WhatsApp e organização comercial para reduzir perda de lead e melhorar o primeiro atendimento.',
     contactLabel: 'WhatsApp direto',
   },
 }

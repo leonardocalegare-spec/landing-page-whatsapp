@@ -11,10 +11,16 @@ function App() {
   )
   const whatsappLink = `https://wa.me/${content.whatsappNumber}?text=${whatsappMessage}`
   const whatsappDisplay = content.whatsappDisplay
+  const primaryCtaHref = '#lead-form'
 
   return (
     <div id="top">
-      <Header brand={content.brand} nav={content.nav} whatsappLink={whatsappLink} />
+      <Header
+        brand={content.brand}
+        nav={content.nav}
+        ctaHref={primaryCtaHref}
+        ctaLabel={content.primaryCta}
+      />
 
       <main>
         <section className="hero">
@@ -25,11 +31,10 @@ function App() {
               <p>{content.hero.subtitle}</p>
 
               <div className="hero-actions">
-                <Button href="#contato">{content.hero.primaryCta}</Button>
-                <Button href={whatsappLink} variant="secondary">
-                  {content.hero.secondaryCta}
-                </Button>
+                <Button href={primaryCtaHref}>{content.primaryCta}</Button>
               </div>
+
+              <p className="hero-support">{content.hero.support}</p>
 
               <div className="hero-highlights">
                 {content.hero.highlights.map((item) => (
@@ -41,7 +46,7 @@ function App() {
             </div>
 
             <div className="hero-card">
-              <span className="card-badge">Setup comercial inicial</span>
+              <span className="card-badge">{content.hero.cardBadge}</span>
               <h3>{content.hero.cardTitle}</h3>
               <ul>
                 {content.hero.cardItems.map((item) => (
@@ -49,25 +54,25 @@ function App() {
                 ))}
               </ul>
               <div className="hero-card-footer">
-                <span>Mais clareza</span>
-                <span>Mais contexto</span>
-                <span>Mais consistência</span>
+                <span>Captação</span>
+                <span>WhatsApp</span>
+                <span>Organização</span>
               </div>
             </div>
           </div>
         </section>
 
         <Section
-          id="dores"
-          eyebrow="Problema"
-          title={content.painPoints.title}
-          description={content.painPoints.description}
+          id="dor"
+          eyebrow="Dor"
+          title={content.problem.title}
+          description={content.problem.description}
         >
           <div className="card-grid">
-            {content.painPoints.items.map((item) => (
-              <article key={item} className="info-card">
-                <h3>{item}</h3>
-                <p>Esse ponto reduz velocidade, previsibilidade e aproveitamento dos contatos.</p>
+            {content.problem.items.map((item) => (
+              <article key={item.title} className="info-card">
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
               </article>
             ))}
           </div>
@@ -80,17 +85,23 @@ function App() {
           description={content.solution.description}
           className="section-alt"
         >
-          <div className="feature-list">
+          <div className="solution-grid">
             {content.solution.items.map((item) => (
-              <div key={item} className="feature-item">
+              <article key={item.title} className="solution-card">
                 <span className="feature-dot" />
-                <p>{item}</p>
-              </div>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+              </article>
             ))}
           </div>
         </Section>
 
-        <Section id="como-funciona" eyebrow="Processo" title={content.howItWorks.title}>
+        <Section
+          id="como-funciona"
+          eyebrow="Como funciona"
+          title={content.howItWorks.title}
+          description={content.howItWorks.description}
+        >
           <div className="steps-grid">
             {content.howItWorks.steps.map((step) => (
               <article key={step.number} className="step-card">
@@ -104,25 +115,63 @@ function App() {
 
         <Section
           id="beneficios"
-          eyebrow="Resultado"
+          eyebrow="Benefícios"
           title={content.benefits.title}
+          description={content.benefits.description}
           className="section-alt"
         >
           <div className="benefits-grid">
             {content.benefits.items.map((item) => (
-              <article key={item} className="benefit-card">
+              <article key={item.title} className="benefit-card">
                 <span className="benefit-check">✓</span>
-                <p>{item}</p>
+                <div>
+                  <h3>{item.title}</h3>
+                  <p>{item.text}</p>
+                </div>
               </article>
             ))}
           </div>
         </Section>
 
-        <Section id="credibilidade" eyebrow="Aplicação prática" title={content.credibility.title}>
-          <div className="credibility-box">
-            <p>{content.credibility.text}</p>
+        <Section
+          id="para-quem"
+          eyebrow="Para quem é"
+          title={content.audience.title}
+          description={content.audience.description}
+        >
+          <div className="audience-grid">
+            <article className="audience-card">
+              <h3>{content.audience.profileTitle}</h3>
+              <ul className="audience-list">
+                {content.audience.profileItems.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </article>
+
+            <article className="audience-card">
+              <h3>{content.audience.nichesTitle}</h3>
+              <div className="audience-pills">
+                {content.audience.niches.map((item) => (
+                  <span key={item} className="pill">
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </article>
+          </div>
+        </Section>
+
+        <Section
+          id="autoridade"
+          eyebrow="Autoridade"
+          title={content.authority.title}
+          className="section-alt"
+        >
+          <div className="authority-card">
+            <p>{content.authority.text}</p>
             <div className="credibility-points">
-              {content.credibility.highlights.map((item) => (
+              {content.authority.highlights.map((item) => (
                 <span key={item} className="pill">
                   {item}
                 </span>
@@ -131,48 +180,45 @@ function App() {
           </div>
         </Section>
 
-        <Section
-          id="contato"
-          eyebrow="Captação"
-          title={content.form.title}
-          description={content.form.description}
-          className="section-alt"
-        >
-          <div className="contact-grid">
-            <div className="contact-copy">
-              <h3>{content.form.sideTitle}</h3>
-              <p>{content.form.sideText}</p>
-              <div className="contact-points">
-                {content.form.sidePoints.map((item) => (
-                  <span key={item} className="pill">
-                    {item}
-                  </span>
-                ))}
+        <section id="contato" className="final-cta">
+          <div className="container final-cta-shell">
+            <div className="final-cta-box">
+              <div>
+                <span className="eyebrow">{content.finalCta.eyebrow}</span>
+                <h2>{content.finalCta.title}</h2>
+                <p>{content.finalCta.text}</p>
               </div>
-              <div className="contact-actions">
-                <Button href={whatsappLink} variant="secondary">
-                  Falar no WhatsApp
-                </Button>
+              <div className="final-cta-actions">
+                <Button href={primaryCtaHref}>{content.primaryCta}</Button>
+                <p className="final-cta-note">{content.finalCta.note}</p>
               </div>
             </div>
 
-            <LeadForm content={content.form} />
-          </div>
-        </Section>
+            <div className="contact-grid">
+              <div className="contact-copy">
+                <h3>{content.form.sideTitle}</h3>
+                <p>{content.form.sideText}</p>
+                <div className="contact-points">
+                  {content.form.sidePoints.map((item) => (
+                    <span key={item} className="pill">
+                      {item}
+                    </span>
+                  ))}
+                </div>
+                <div className="contact-note">
+                  <span>{content.form.directWhatsappText}</span>{' '}
+                  <a href={whatsappLink} target="_blank" rel="noreferrer">
+                    Falar no WhatsApp
+                  </a>
+                </div>
+              </div>
 
-        <section className="final-cta">
-          <div className="container final-cta-box">
-            <div>
-              <span className="eyebrow">Próximo passo</span>
-              <h2>{content.finalCta.title}</h2>
-              <p>{content.finalCta.text}</p>
-            </div>
-            <div className="final-cta-actions">
-              <Button href={whatsappLink}>{content.finalCta.button}</Button>
-              <div className="signature-card">
-                <span className="signature-eyebrow">{content.signature.eyebrow}</span>
-                <strong>{content.signature.name}</strong>
-                <p>{content.signature.role}</p>
+              <div id="lead-form" className="lead-form-shell">
+                <div className="lead-form-intro">
+                  <h3>{content.form.title}</h3>
+                  <p>{content.form.description}</p>
+                </div>
+                <LeadForm content={content.form} />
               </div>
             </div>
           </div>
