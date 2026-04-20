@@ -1,4 +1,11 @@
-export default function Footer({ brand, text, contactLabel, whatsappDisplay, whatsappLink }) {
+export default function Footer({
+  brand,
+  text,
+  contactLabel,
+  whatsappDisplay,
+  whatsappLink,
+  signature,
+}) {
   return (
     <footer className="site-footer">
       <div className="container footer-inner">
@@ -15,6 +22,10 @@ export default function Footer({ brand, text, contactLabel, whatsappDisplay, wha
             </a>
           </p>
         </div>
+      </div>
+
+      <div className="container footer-meta">
+        <p>{signature}</p>
       </div>
     </footer>
   )

@@ -7,6 +7,11 @@ export function buildLeadPayload(values) {
     whatsapp: values.whatsapp.trim(),
     segment: values.segment.trim(),
     difficulty: values.difficulty.trim(),
+    contactArrival: values.contactArrival.trim(),
+    afterContact: values.afterContact.trim(),
+    difficultyFocus: values.difficultyFocus.trim(),
+    currentTools: values.currentTools.trim(),
+    scenarioDetails: values.scenarioDetails.trim(),
     createdAt: new Date().toISOString(),
     source: LEAD_CAPTURE_CONFIG.source,
   }
@@ -72,7 +77,8 @@ export async function submitLead(payload) {
 
     return {
       ok: false,
-      message: 'Não foi possível enviar agora. Tente novamente em instantes.',
+      message:
+        'Não consegui concluir o envio agora. Tente novamente em alguns instantes ou fale direto no WhatsApp.',
     }
   }
 
@@ -88,7 +94,8 @@ export async function submitLead(payload) {
     return {
       ok: false,
       message:
-        responseData?.message || 'O envio não foi concluído. Revise a integração e tente novamente.',
+        responseData?.message ||
+        'Não consegui concluir o envio agora. Tente novamente em alguns instantes ou fale direto no WhatsApp.',
       status: response.status,
     }
   }
@@ -97,7 +104,8 @@ export async function submitLead(payload) {
     return {
       ok: false,
       message:
-        responseData.message || 'Não foi possível gravar o lead. Tente novamente em instantes.',
+        responseData.message ||
+        'Não consegui concluir o envio agora. Tente novamente em alguns instantes ou fale direto no WhatsApp.',
     }
   }
 
@@ -105,5 +113,44 @@ export async function submitLead(payload) {
     ok: true,
     mode: 'remote',
     message: responseData?.message,
+  }
+}
+
+export async function submitLeadInBackground(payload) {
+  const endpoint = getEndpoint()
+
+  if (!endpoint) {
+    return Promise.resolve({
+      ok: false,
+      message: 'A captação ainda não está conectada. Verifique a configuração da API de leads.',
+    })
+  }
+
+  try {
+    const response = await sendLead(endpoint, payload, { keepalive: true })
+    const responseData = await readResponseBody(response)
+
+    if (!response.ok || responseData?.success === false) {
+      return {
+        ok: false,
+        message:
+          responseData?.message ||
+          'Recebi seu envio, mas não consegui confirmar com o servidor. Vou tentar novamente em instantes.',
+      }
+    }
+
+    return {
+      ok: true,
+      mode: 'background',
+      message: responseData?.message,
+    }
+  } catch (error) {
+    console.error('[lead-submit] background request failed', error)
+
+    return {
+      ok: false,
+      message:
+        'Recebi seu envio, mas não consegui confirmar com o servidor agora. Vou tentar novamente em instantes.',
+    }
   }
 }

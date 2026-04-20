@@ -3,7 +3,61 @@ import Section from './components/Section'
 import Button from './components/Button'
 import LeadForm from './components/LeadForm'
 import Footer from './components/Footer'
+import VideoShowcase from './components/VideoShowcase'
+import FloatingActions from './components/FloatingActions'
+import { motion } from 'framer-motion'
+import { UserX, MessagesSquare, GitMerge, CheckCircle2 } from 'lucide-react'
 import { content } from './data/content'
+
+// ─── Mapa de ícones por nome (evita dynamic import) ──────────────────────────
+const PAIN_ICONS = { UserX, MessagesSquare, GitMerge }
+
+// Variante de card para herdar o stagger do Section pai
+const cardVariant = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+  },
+}
+
+// ─── PainCard ─────────────────────────────────────────────────────────────────
+function PainCard({ item }) {
+  const Icon = PAIN_ICONS[item.icon]
+  return (
+    <motion.article className="info-card" variants={cardVariant}>
+      {Icon && (
+        <span className="pain-icon-wrap" aria-hidden="true">
+          <Icon size={22} strokeWidth={1.75} />
+        </span>
+      )}
+      <h3>{item.title}</h3>
+      <p>{item.text}</p>
+    </motion.article>
+  )
+}
+
+// ─── StepCard ─────────────────────────────────────────────────────────────────
+function StepCard({ step, isLast }) {
+  return (
+    <motion.article
+      className={`step-flow-card${isLast ? ' step-flow-card--last' : ''}`}
+      variants={cardVariant}
+    >
+      <div className="step-flow-left">
+        <span className="step-flow-number">{step.number}</span>
+        {!isLast && <span className="step-flow-line" aria-hidden="true" />}
+      </div>
+      <div className="step-flow-body">
+        <h3>{step.title}</h3>
+        <p>{step.text}</p>
+      </div>
+    </motion.article>
+  )
+}
+
+
 
 function App() {
   const whatsappMessage = encodeURIComponent(
@@ -17,9 +71,10 @@ function App() {
     <div id="top">
       <Header
         brand={content.brand}
+        brandTagline={content.brandTagline}
         nav={content.nav}
         ctaHref={primaryCtaHref}
-        ctaLabel={content.primaryCta}
+        ctaLabel={content.headerCta || content.primaryCta}
       />
 
       <main>
@@ -30,35 +85,33 @@ function App() {
               <h1>{content.hero.title}</h1>
               <p>{content.hero.subtitle}</p>
 
+              <ul className="hero-bullets">
+                {content.hero.bullets.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+
               <div className="hero-actions">
                 <Button href={primaryCtaHref}>{content.primaryCta}</Button>
               </div>
-
-              <p className="hero-support">{content.hero.support}</p>
-
-              <div className="hero-highlights">
-                {content.hero.highlights.map((item) => (
-                  <span key={item} className="pill">
-                    {item}
-                  </span>
-                ))}
-              </div>
             </div>
 
-            <div className="hero-card">
+            <div className="hero-card hero-card--flow">
               <span className="card-badge">{content.hero.cardBadge}</span>
-              <h3>{content.hero.cardTitle}</h3>
+              <h2>{content.hero.cardTitle}</h2>
               <ul>
                 {content.hero.cardItems.map((item) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
-              <div className="hero-card-footer">
-                <span>Captação</span>
-                <span>WhatsApp</span>
-                <span>Organização</span>
-              </div>
             </div>
+          </div>
+        </section>
+
+        {/* ── Video Showcase: prova visual imediata após o Hero ── */}
+        <section id="showcase" className="showcase-section">
+          <div className="container">
+            <VideoShowcase />
           </div>
         </section>
 
@@ -70,10 +123,7 @@ function App() {
         >
           <div className="card-grid">
             {content.problem.items.map((item) => (
-              <article key={item.title} className="info-card">
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-              </article>
+              <PainCard key={item.title} item={item} />
             ))}
           </div>
         </Section>
@@ -102,34 +152,37 @@ function App() {
           title={content.howItWorks.title}
           description={content.howItWorks.description}
         >
-          <div className="steps-grid">
-            {content.howItWorks.steps.map((step) => (
-              <article key={step.number} className="step-card">
-                <span className="step-number">{step.number}</span>
-                <h3>{step.title}</h3>
-                <p>{step.text}</p>
-              </article>
+          <div className="steps-flow">
+            {content.howItWorks.steps.map((step, index) => (
+              <StepCard
+                key={step.number}
+                step={step}
+                isLast={index === content.howItWorks.steps.length - 1}
+              />
             ))}
           </div>
         </Section>
 
         <Section
-          id="beneficios"
-          eyebrow="Benefícios"
-          title={content.benefits.title}
-          description={content.benefits.description}
-          className="section-alt"
+          id="o-que-fica-pronto"
+          eyebrow="O que fica pronto"
+          title={content.included.title}
+          description={content.included.description}
         >
-          <div className="benefits-grid">
-            {content.benefits.items.map((item) => (
-              <article key={item.title} className="benefit-card">
-                <span className="benefit-check">✓</span>
-                <div>
-                  <h3>{item.title}</h3>
-                  <p>{item.text}</p>
-                </div>
-              </article>
-            ))}
+          <div className="included-panel">
+            <ul className="included-list">
+              {content.included.items.map((item) => (
+                <li key={item} className="included-list-item">
+                  <CheckCircle2
+                    size={16}
+                    strokeWidth={2.5}
+                    className="included-check"
+                    aria-hidden="true"
+                  />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </Section>
 
@@ -139,86 +192,46 @@ function App() {
           title={content.audience.title}
           description={content.audience.description}
         >
-          <div className="audience-grid">
-            <article className="audience-card">
-              <h3>{content.audience.profileTitle}</h3>
-              <ul className="audience-list">
-                {content.audience.profileItems.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </article>
-
-            <article className="audience-card">
-              <h3>{content.audience.nichesTitle}</h3>
-              <div className="audience-pills">
-                {content.audience.niches.map((item) => (
-                  <span key={item} className="pill">
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </article>
-          </div>
-        </Section>
-
-        <Section
-          id="autoridade"
-          eyebrow="Autoridade"
-          title={content.authority.title}
-          className="section-alt"
-        >
-          <div className="authority-card">
-            <p>{content.authority.text}</p>
-            <div className="credibility-points">
-              {content.authority.highlights.map((item) => (
-                <span key={item} className="pill">
-                  {item}
-                </span>
+          <article className="audience-card audience-card--single">
+            <ul className="audience-list audience-list--compact">
+              {content.audience.items.map((item) => (
+                <li key={item}>{item}</li>
               ))}
-            </div>
-          </div>
+            </ul>
+          </article>
         </Section>
 
         <section id="contato" className="final-cta">
           <div className="container final-cta-shell">
-            <div className="final-cta-box">
-              <div>
-                <span className="eyebrow">{content.finalCta.eyebrow}</span>
-                <h2>{content.finalCta.title}</h2>
-                <p>{content.finalCta.text}</p>
-              </div>
-              <div className="final-cta-actions">
-                <Button href={primaryCtaHref}>{content.primaryCta}</Button>
-                <p className="final-cta-note">{content.finalCta.note}</p>
-              </div>
-            </div>
+            <div className="final-cta-panel">
+              <div className="final-cta-grid">
+                <div className="final-cta-copy">
+                  <div className="final-cta-copy-head">
+                    <span className="eyebrow">{content.finalCta.eyebrow}</span>
+                    <h2>{content.finalCta.title}</h2>
+                    <p>{content.finalCta.text}</p>
+                  </div>
 
-            <div className="contact-grid">
-              <div className="contact-copy">
-                <h3>{content.form.sideTitle}</h3>
-                <p>{content.form.sideText}</p>
-                <div className="contact-points">
-                  {content.form.sidePoints.map((item) => (
-                    <span key={item} className="pill">
-                      {item}
-                    </span>
-                  ))}
-                </div>
-                <div className="contact-note">
-                  <span>{content.form.directWhatsappText}</span>{' '}
-                  <a href={whatsappLink} target="_blank" rel="noreferrer">
-                    Falar no WhatsApp
-                  </a>
-                </div>
-              </div>
+                  <div className="final-cta-actions">
+                    <Button href={primaryCtaHref}>{content.finalCta.button}</Button>
+                  </div>
 
-              <div id="lead-form" className="lead-form-shell">
-                <div className="lead-form-intro">
-                  <h3>{content.form.title}</h3>
-                  <p>{content.form.description}</p>
+                  <div className="contact-note">
+                    <span>{content.form.directWhatsappText}</span>{' '}
+                    <a href={whatsappLink} target="_blank" rel="noreferrer">
+                      Falar no WhatsApp
+                    </a>
+                  </div>
                 </div>
-                <LeadForm content={content.form} />
+
+                <div id="lead-form" className="lead-form-shell">
+                  <div className="lead-form-intro">
+                    <h3>{content.form.title}</h3>
+                    <p>{content.form.description}</p>
+                  </div>
+                  <LeadForm content={content.form} whatsappLink={whatsappLink} />
+                  <p className="lead-form-microcopy">{content.form.microcopy}</p>
+                </div>
               </div>
             </div>
           </div>
@@ -231,7 +244,10 @@ function App() {
         contactLabel={content.footer.contactLabel}
         whatsappDisplay={whatsappDisplay}
         whatsappLink={whatsappLink}
+        signature={content.authority.signature}
       />
+
+      <FloatingActions whatsappNumber={content.whatsappNumber} />
     </div>
   )
 }

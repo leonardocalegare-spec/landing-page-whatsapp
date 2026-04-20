@@ -1,4 +1,16 @@
-const REQUIRED_FIELDS = ['name', 'company', 'whatsapp', 'segment', 'difficulty', 'createdAt', 'source']
+const REQUIRED_FIELDS = [
+  'name',
+  'company',
+  'whatsapp',
+  'segment',
+  'difficulty',
+  'contactArrival',
+  'afterContact',
+  'difficultyFocus',
+  'currentTools',
+  'createdAt',
+  'source',
+]
 
 function readBody(req) {
   if (!req.body) {
@@ -33,15 +45,20 @@ async function readAppsScriptResponse(response) {
   const responseText = await response.text()
 
   if (!responseText) {
-    return null
+    return {
+      parsed: null,
+      raw: '',
+    }
   }
 
   try {
-    return JSON.parse(responseText)
+    return {
+      parsed: JSON.parse(responseText),
+      raw: responseText,
+    }
   } catch {
     return {
-      success: false,
-      message: 'O Apps Script retornou uma resposta não JSON.',
+      parsed: null,
       raw: responseText,
     }
   }
@@ -91,11 +108,6 @@ export default async function handler(req, res) {
     })
   }
 
-  console.info('[api/lead] forwarding lead', {
-    endpoint,
-    source: payload.source,
-  })
-
   let appsScriptResponse
 
   try {
@@ -114,36 +126,58 @@ export default async function handler(req, res) {
     return res.status(502).json({
       success: false,
       message: 'Não foi possível conectar ao Google Apps Script.',
+      details: String(error),
     })
   }
 
-  const responseData = await readAppsScriptResponse(appsScriptResponse)
+  const contentLength = Number(appsScriptResponse.headers.get('content-length') || 0)
 
-  console.info('[api/lead] upstream response', {
-    ok: appsScriptResponse.ok,
+  if (appsScriptResponse.ok && contentLength === 0) {
+    return res.status(200).json({
+      success: true,
+      message: 'Lead recebido e encaminhado com sucesso.',
+    })
+  }
+
+  const { parsed, raw } = await readAppsScriptResponse(appsScriptResponse)
+
+  console.info('[api/lead] upstream debug', {
     status: appsScriptResponse.status,
-    success: responseData?.success,
+    ok: appsScriptResponse.ok,
+    contentType: appsScriptResponse.headers.get('content-type'),
+    raw,
   })
+
+  if (!parsed) {
+    return res.status(502).json({
+      success: false,
+      message: 'O Apps Script retornou uma resposta não JSON.',
+      status: appsScriptResponse.status,
+      contentType: appsScriptResponse.headers.get('content-type'),
+      raw,
+    })
+  }
 
   if (!appsScriptResponse.ok) {
     return res.status(502).json({
       success: false,
-      message:
-        responseData?.message ||
-        'O Google Apps Script respondeu com erro ao processar o lead.',
+      message: parsed?.message || 'O Google Apps Script respondeu com erro ao processar o lead.',
+      status: appsScriptResponse.status,
+      raw,
     })
   }
 
-  if (responseData?.success === false) {
+  if (parsed?.success === false) {
     return res.status(502).json({
       success: false,
-      message:
-        responseData.message || 'O Google Apps Script não conseguiu gravar o lead na planilha.',
+      message: parsed.message || 'O Google Apps Script não conseguiu gravar o lead na planilha.',
+      status: appsScriptResponse.status,
+      raw,
     })
   }
 
   return res.status(200).json({
     success: true,
-    message: responseData?.message || 'Lead recebido e encaminhado com sucesso.',
+    message: parsed?.message || 'Lead recebido e encaminhado com sucesso.',
   })
 }
