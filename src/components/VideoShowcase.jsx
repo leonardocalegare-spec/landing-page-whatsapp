@@ -73,7 +73,7 @@ export default function VideoShowcase() {
                 opacity=".7"
               />
             </svg>
-            <span className="vsc-address-text">operacao-whatsapp.vercel.app</span>
+            <span className="vsc-address-text">operacaowpp.com.br</span>
           </div>
 
           {/* Ícones de ação direita */}
